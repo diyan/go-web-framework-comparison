@@ -90,7 +90,7 @@ PRO Golang 1.7 context uses per-request context map, Request.WithContext does a 
 
 ### stdlib net/http
 stdlib net/http or negroni + stdlib net/http or negroni + gorilla/mux, https://golang.org/pkg/net/http/#ServeMux.HandleFunc
-```golang
+```go
 func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request))
 
 mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) { ...
@@ -98,7 +98,7 @@ mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) { ...
 
 ### gin-gonic/gin
 https://godoc.org/github.com/gin-gonic/gin#RouterGroup.GET
-```golang
+```go
 func (group *RouterGroup) GET(relativePath string, handlers ...HandlerFunc) IRoutes
 type HandlerFunc func(*gin.Context)
 
@@ -107,7 +107,7 @@ g.GET("/", func(c *gin.Context) { ...
 
 ### go-macaron/macaron
 https://godoc.org/github.com/go-macaron/macaron#Router.Get
-```golang
+```go
 func (r *Router) Get(pattern string, h ...Handler) (leaf *Route)
 type Handler interface{}
 
@@ -117,7 +117,7 @@ m.Get("/", func(ctx *macaron.Context) (int, []byte) { ...
 
 ### go-martini/martini
 https://godoc.org/github.com/go-martini/martini#Router
-```golang
+```go
 func (r *Router) Get(string, ...Handler) Route
 type Handler interface{}
 
@@ -127,7 +127,7 @@ m.Get("/", func() (int, string) { ...
 
 ### gocraft/web
 https://godoc.org/github.com/gocraft/web#Router.Get
-```golang
+```go
 func (r *Router) Get(path string, fn interface{}) *Router
 
 w.Get("/", func (c *SomeUserContext) SayHello(w web.ResponseWriter, r *web.Request) { ...
@@ -135,7 +135,7 @@ w.Get("/", func (c *SomeUserContext) SayHello(w web.ResponseWriter, r *web.Reque
 
 ### goji/goji
 https://godoc.org/github.com/goji/goji#Mux.HandleFunc
-```golang
+```go
 func (m *Mux) HandleFunc(p Pattern, h func(http.ResponseWriter, *http.Request))
 func (m *Mux) HandleFuncC(p Pattern, h func(context.Context, http.ResponseWriter, *http.Request))
 type Pattern interface {
@@ -148,7 +148,7 @@ g.HandleFuncC(pat.Get("/"), func (ctx context.Context, w http.ResponseWriter, r 
 
 ### hoisie/web
 https://godoc.org/github.com/hoisie/web#Get
-```golang
+```go
 func Get(route string, handler interface{})
 
 w.Get("/", func(ctx *web.Context, val string) { ...
@@ -157,7 +157,7 @@ w.Get("/", func(val string) string { ...
 
 ### julienschmidt/httprouter
 https://godoc.org/github.com/julienschmidt/httprouter#Router.GET
-```golang
+```go
 func (r *Router) GET(path string, handle Handle)
 type Handle func(http.ResponseWriter, *http.Request, Params)
 
@@ -166,7 +166,7 @@ r.GET("/", func Index(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 
 ### labstack/echo
 https://godoc.org/github.com/labstack/echo#Echo.Get
-```golang
+```go
 func (e *Echo) Get(path string, h HandlerFunc, m ...MiddlewareFunc)
 type HandlerFunc func(echo.Context) error
 type MiddlewareFunc func(HandlerFunc) HandlerFunc
@@ -176,7 +176,7 @@ e.Get("/", func(c echo.Context) error { ...
 
 ### pressly/chi
 https://godoc.org/github.com/pressly/chi#Mux.Get
-```golang
+```go
 func (mx *Mux) Get(pattern string, handlerFn http.HandlerFunc)
 
 c.Get("/", func(w http.ResponseWriter, r *http.Request) { ...
@@ -184,7 +184,7 @@ c.Get("/", func(w http.ResponseWriter, r *http.Request) { ...
 
 ### zenazn/goji
 https://godoc.org/github.com/zenazn/goji#Get
-```golang
+```go
 func Get(pattern web.PatternType, handler web.HandlerType)
 type PatternType interface{}
 type HandlerType interface{}
@@ -212,7 +212,7 @@ Q negroni uses quite unusual signature for middleware. Why? I have only one expl
 TODO gocraft/web PROs and CONs that related to the middleware API
 
 ### stdlib net/http, gorilla/mux, julienschmidt/httprouter, pressly/chi
-```golang
+```go
 func(http.Handler) http.Handler
 
 func Middleware(next http.Handler) http.Handler {
@@ -225,7 +225,7 @@ func Middleware(next http.Handler) http.Handler {
 ```
 
 ### gin-gonic/gin
-```golang
+```go
 // gin uses same signature for both handler and middleware
 type HandlerFunc func(*Context)
 
@@ -239,7 +239,7 @@ func Middleware() gin.HandlerFunc {
 ```
 
 ### gocraft/web
-```golang
+```go
 // TODO
 
 func (c *SomeUserContext) SetHelloCount(w web.ResponseWriter, r *web.Request, next web.NextMiddlewareFunc) {
@@ -250,7 +250,7 @@ func (c *SomeUserContext) SetHelloCount(w web.ResponseWriter, r *web.Request, ne
 ```
 
 ### goji/goji 
-```golang
+```go
 func(http.Handler) http.Handler // standard middleware
 func(goji.Handler) goji.Handler  // context-aware middleware
 
@@ -264,7 +264,7 @@ func Middleware(inner goji.Handler) goji.Handler {
 ```
 
 ### labstack/echo
-```golang
+```go
 type MiddlewareFunc func(HandlerFunc) HandlerFunc
 type HandlerFunc func(Context) error
 
@@ -279,7 +279,7 @@ func Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 ```
 
 ### urfave/negroni
-```golang
+```go
 type HandlerFunc func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc)
 
 func Middleware(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
