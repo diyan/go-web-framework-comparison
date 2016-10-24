@@ -461,7 +461,7 @@ m.Post("/", binding.Bind(Greeting{}), func(g Greeting) (int, string) {
 TODO Review implementation in https://github.com/corneldamian/json-binding/blob/master/request.go#L56
 
 ### labstack/echo
-```
+```go
 e.POST("/", func(c echo.Context) error {
 	g := new(Greeting)
 	if err := c.Bind(g); err != nil {
