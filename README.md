@@ -393,4 +393,91 @@ c.Get("/", func(w http.ResponseWriter, r *http.Request) {
 ```
 
 ## HTTP handler. Bind JSON payload into Go struct
-TODO
+
+### Common part
+```go
+type Greeting struct {
+	Hello string `json:"hello"`
+}
+```
+
+### stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter, go-macaron/macaron, hoisie/web. V1 - use only stdlib
+```go
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	g := new(Greeting)
+	defer r.Body.Close()
+	if err := json.NewDecoder(r.Body).Decode(g); err != nil {
+		panic(err)
+	}
+	// TODO put here validation code
+	w.WriteHeader(http.StatusCreated)
+}
+```
+
+### stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter, go-macaron/macaron, hoisie/web. V2 - use mholt/binding
+```go
+// mholt/binding is the reflectioness data binding library developed by co-author of the martini-contrib/binding
+
+// for JSON you can return an empty field map
+func (g *Greeting) FieldMap() binding.FieldMap {
+	return binding.FieldMap{}
+}
+
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	g := new(Greeting)
+	errs := binding.Bind(r, g)
+	// If parsing failed Handle will render HTTP 400 response with error details and return true
+	if errs.Handle(w) {
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+}
+```
+
+### gin-gonic/gin
+```go
+r.POST("/", func(c *gin.Context) {
+	g := new(Greeting)
+	if c.BindJSON(g); err != nil {
+		panic(err)
+	}
+	c.Abort(http.StatusCreated)
+})
+```
+
+### go-martini/martini + martini-contrib/binding that menioned in README
+```go
+// Greeting struct may also contain binding tags
+type Greeting struct {
+	Hello string `json:"hello" binding:"required"`
+}
+// TODO check is binding.Bind(..) renders HTTP 400 response if validation fails
+m.Post("/", binding.Bind(Greeting{}), func(g Greeting) (int, string) {
+	return http.StatusNoContent, ""
+})
+```
+
+### gocraft/web + corneldamian/json-binding than mentioned in README
+TODO Review implementation in https://github.com/corneldamian/json-binding/blob/master/request.go#L56
+
+### labstack/echo
+```
+e.POST("/", func(c echo.Context) error {
+	g := new(Greeting)
+	if err := c.Bind(g); err != nil {
+		return err
+	}
+	return c.NoContent(http.StatusCreated)
+})
+```
+
+### pressly/chi
+```go
+c.Post("/", func(w http.ResponseWriter, r *http.Request) {
+	g := new(Greeting)
+	if err := render.Bind(r.Body, g); err != nil {
+		panic(err)
+	}
+	render.NoContent(w, r)
+})
+```
