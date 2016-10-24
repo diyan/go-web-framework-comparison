@@ -319,14 +319,6 @@ mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 })
 ```
 
-### labstack/echo
-```go
-e.Get("/", func(c echo.Context) error {
-    //  method will return error if serialization fails, then handler return that error to the middleware/framework
-    return c.JSON(http.StatusOK, Greeting{Hello: "world"})
-})
-```
-
 ### gin-gonic/gin
 ```go
 r.GET("/", func(c *gin.Context) {
@@ -347,6 +339,15 @@ m.Get("/", func(r render.Render) {
 m.Get("/", func(ctx *macaron.Context) {
     ctx.JSON(http.StatusOK, Greeting{Hello: "world"})
 }
+```
+
+### go-martini/martini + martini-contrib/render that menioned in README
+```go
+// render.Render will be passed to the handler by using dependency injection
+m.Get("/", func(r render.Render) {
+    // method will render HTTP 500 response if serialization fails
+    r.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
 ```
 
 ### gocraft/web + corneldamian/json-binding than mentioned in README
@@ -375,12 +376,11 @@ w.Get("/", func(ctx *Context) []byte {
 })
 ```
 
-### martini + martini-contrib/render that menioned in README
+### labstack/echo
 ```go
-// render.Render will be passed to the handler by using dependency injection
-m.Get("/", func(r render.Render) {
-    // method will render HTTP 500 response if serialization fails
-    r.JSON(http.StatusOK, Greeting{Hello: "world"})
+e.Get("/", func(c echo.Context) error {
+    //  method will return error if serialization fails, then handler return that error to the middleware/framework
+    return c.JSON(http.StatusOK, Greeting{Hello: "world"})
 })
 ```
 
