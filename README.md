@@ -290,7 +290,107 @@ func Middleware(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) 
 ```
 
 ## HTTP handler. Write Go struct as JSON response
-TODO
+
+### Common part
+```go
+type Greeting struct {
+    Hello string `json:"hello"`
+}
+```
+
+### stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter. V1 - use only stdlib
+```go
+http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+    w.WriteHeader(http.StatusOK)    
+    if err := json.NewEncoder(w).Encode(Greeting{Hello: "world"}); err != nil {
+        panic(err)
+    }
+})
+```
+
+### stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter. V2 - use unrolled/render that mentioned in negroni's README
+```go
+r := render.New()
+mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+    if err := r.JSON(w, http.StatusOK, Greeting{Hello: "world"}); err != nil {
+        panic(err)
+    }
+})
+```
+
+### labstack/echo
+```go
+e.Get("/", func(c echo.Context) error {
+    //  method will return error if serialization fails, then handler return that error to the middleware/framework
+    return c.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
+```
+
+### gin-gonic/gin
+```go
+r.GET("/", func(c *gin.Context) {
+    // method will panic if serialization fails
+    c.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
+```
+
+### go-macaron/macaron. Use either macaron.Context or macaron.render.Render
+```go
+// render.Render or macaron.Context will be passed to the handler by using dependency injection
+m.Get("/", func(r render.Render) {
+    // method will render HTTP 500 response if serialization fails
+    r.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
+
+// V2
+m.Get("/", func(ctx *macaron.Context) {
+    ctx.JSON(http.StatusOK, Greeting{Hello: "world"})
+}
+```
+
+### gocraft/web + corneldamian/json-binding than mentioned in README
+TODO Review implementation in https://github.com/corneldamian/json-binding/blob/master/response.go#L47
+
+### hoisie/web
+```go
+// web.Context will be passed to the handler by using dependency injection
+w.Get("/", func(ctx *web.Context) string {
+    ctx.ContentType("json")
+    data, err := json.Marshal(Greeting{Hello: "world"})
+    if err != nil {
+        panic(err)
+    }
+    return string(data)
+})
+
+// V2
+w.Get("/", func(ctx *Context) []byte {
+    ctx.ContentType("json")
+    data, err := json.Marshal(Greeting{Hello: "world"})
+    if err != nil {
+        panic(err)
+    }
+    return data
+})
+```
+
+### martini + martini-contrib/render that menioned in README
+```go
+// render.Render will be passed to the handler by using dependency injection
+m.Get("/", func(r render.Render) {
+    // method will render HTTP 500 response if serialization fails
+    r.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
+```
+
+### pressly/chi
+```go
+c.Get("/", func(w http.ResponseWriter, r *http.Request) {
+    // method will render HTTP 500 response if serialization fails
+    render.JSON(w, r, Greeting{Hello: "world"})
+})
+```
 
 ## HTTP handler. Bind JSON payload into Go struct
 TODO
