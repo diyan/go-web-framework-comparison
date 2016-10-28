@@ -43,9 +43,9 @@ NOTE While code blocks are self-explained the list of PROs an CONs are highly op
 - :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, pressly/chi handers are stronly typed
 - :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, pressly/chi do dispatch requests by HTTP verb
 - :thumbsup: echo, gin, zenazn/goji, pressly/chi support HTTP middleware
+- :thumbsup: echo handers returns error value which could be handled in next middlewares in the chain
 - :question: julienschmidt/httprouter does not support HTTP middleware, gorilla/handlers are recommended instead
-- :question: goji/goji keeps handler interface standard but it's quite verbose to type. Consider
-- :question: echo handers returns error value which could be handled in next middlewares in the chain. Consider
+- :question: goji/goji keeps handler interface standard but it's quite verbose to type
 - FYI labstack/echo has own router, supports most handler / middleware APIs
 - FYI gin uses julienschmidt/httprouter, per-request context map
 - FYI negroni recommends gorilla/mux router; Golang 1.7 context can be used (or gorilla/context for Golang < 1.7)
