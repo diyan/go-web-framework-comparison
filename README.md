@@ -49,9 +49,6 @@ TODO put explanation and motivation here.
 
 ## HTTP handler. Signature
 
-### tl;dr
-TODO put explanation and summary here. Raw notes are following:
-
 - :thumbsdown: :exclamation: revel, beego are not idiomatic Go because they forces you to embed handler to the Framework's struct
 - :thumbsdown: martini, hoisie/web, macaron handlers are not strongly typed due to reflective dependency injection (which leads to poor performance)
 - :thumbsdown: zenazn/goji handler and middleware is not strongly typed to emulate function overload
@@ -178,21 +175,15 @@ g.Get("/", func(w http.ResponseWriter, req *http.Request) { ...
 ## HTTP middleware. Signature and sample code
 
 ### tl;dr
-TODO add godoc urls, summary. Raw notes are following:
+TODO add godoc urls
 
-CON revel, beego are not considered, they forces you to embed handler to the Framework's struct
-
-CON martini, hoisie/web, macaron are not considered, their handers are not strongly typed due to reflective dependency injection
-
-CON zenazn/goji handler and middleware are not strongly typed to emulate function overload
-
-CON gin has "func (c *Context) Next()" function that visible to all handlers but must be called only inside middleware
-
-PRO echo, goji/goji, pressly/chi, negroni has strongly typed middleware with reasonable signatures
-
-Q negroni uses quite unusual signature for middleware. Why? I have only one explanation at this point. Author decide to avoid usage of higher-order function, so it would be easier to grasp for not-experienced developers
-
-TODO gocraft/web PROs and CONs that related to the middleware API
+- :thumbsdown: revel, beego are not considered, they forces you to embed handler to the Framework's struct
+- :thumbsdown: martini, hoisie/web, macaron are not considered, their handers are not strongly typed due to reflective dependency injection
+- :thumbsdown: zenazn/goji handler and middleware are not strongly typed to emulate function overload
+- :thumbsdown: gin has "func (c *Context) Next()" function that visible to all handlers but must be called only inside middleware
+- :thumbsup: echo, goji/goji, pressly/chi, negroni has strongly typed middleware with reasonable signatures
+- :question: negroni uses quite unusual signature for middleware. Why? I have only one explanation at this point. Author decide to avoid usage of higher-order function, so it would be easier to grasp for not-experienced developers
+- TODO gocraft/web PROs and CONs that related to the middleware API
 
 ### stdlib net/http, gorilla/mux, julienschmidt/httprouter, pressly/chi
 ```go
