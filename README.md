@@ -2,7 +2,7 @@
 
 This suite aims to compare the public API of various Go web frameworks and routers.
 
-NOTE While code blocks are self-explained the list of PROs an CONs are highly opinionated and targeted Go 1.7+. Even if some frameworks has a more :thumbsdown: than another they still are awesome and may work for your use cases better.
+NOTE While code blocks are self-explained the list of PROs an CONs are highly opinionated and targeted Go 1.7+. Even if some frameworks has a more :thumbsdown: than another they still are awesome and may work better for your use cases.
 
 ## Contents
 - [Reviewed libraries and frameworks](#reviewed-libraries-and-frameworks)
