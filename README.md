@@ -1,51 +1,35 @@
 # Golang Web Framework Comparsion
 
-TODO put explanation and motivation here.
+This suite aims to compare the public API of various Go web frameworks and routers.
 
-### Contents
+NOTE While code blocks are self-explained the list of PROs an CONs are highly opinionated and targeted Go 1.7+. Even if some frameworks has a more :thumbsdown: than another they still are awesome and may work for your use cases better.
+
+## Contents
+- [Reviewed libraries and frameworks](#reviewed-libraries-and-frameworks)
 - [HTTP handler. Signature](#http-handler-signature)
-    - [tl;dr](#http-handler-signature-tldr)
-    - stdlib net/http, gorilla/mux, urfave/negroni
-    - gin-gonic/gin
-    - go-macaron/macaron
-    - go-martini/martini
-    - gocraft/web
-    - goji/goji
-    - hoisie/web
-    - julienschmidt/httprouter
-    - labstack/echo
-    - pressly/chi
-    - [zenazn/goji](#zenazn--goji)
 - [HTTP middleware. Signature and sample code](#http-middleware-signature-and-sample-code)
-    - [tl;dr](#http-middeware-signature-tldr)
-    - stdlib net/http, gorilla/mux, pressly/chi
-    - gin-gonic/gin
-    - gocraft/web
-    - goji/goji 
-    - labstack/echo
-    - urfave/negroni
 - [HTTP handler. Write Go struct as JSON response](#http-handler-write-go-struct-as-json-response)
-    - tl;dr
-    - common part
-    - stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter. V1 - use only stdlib
-    - stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter. V2 - use unrolled/render that mentioned in negroni's README
-    - gin-gonic/gin
-    - go-macaron/macaron
-    - go-martini/martini
-    - gocraft/web
-    - hoisie/web
-    - labstack/echo
-    - pressly/chi    
 - [HTTP handler. Bind JSON payload into Go struct](#http-handler-bind-json-payload-into-go-struct)
-    - tl;dr
-    - common part
-    - stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter, go-macaron/macaron, hoisie/web. V1 - use only stdlib
-    - stdlib net/http, gorilla/mux, negroni, zenazn/goji, goji/goji, julienschmidt/httprouter, go-macaron/macaron, hoisie/web. V2 - use mholt/binding
-    - gin-gonic/gin
-    - go-martini/martini
-    - gocraft/web
-    - labstack/echo
-    - pressly/chi
+
+## Reviewed libraries and frameworks
+
+- stdlib net/http
+- gin-gonic/gin
+- go-macaron/macaron
+- go-martini/martini
+- gocraft/web
+- goji/goji
+- gorilla/mux
+- hoisie/web
+- julienschmidt/httprouter (router)
+- labstack/echo
+- mholt/binding (request binding)
+- pressly/chi
+- TODO astaxie/beego
+- TODO revel/revel
+- unrolled/render (response rendering)
+- urfave/negroni
+- zenazn/goji
 
 ## HTTP handler. Signature
 
@@ -174,7 +158,6 @@ g.Get("/", func(w http.ResponseWriter, req *http.Request) { ...
 
 ## HTTP middleware. Signature and sample code
 
-### tl;dr
 TODO add godoc urls
 
 - :thumbsdown: revel, beego are not considered, they forces you to embed handler to the Framework's struct
