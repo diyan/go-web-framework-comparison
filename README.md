@@ -52,41 +52,24 @@ TODO put explanation and motivation here.
 ### tl;dr
 TODO put explanation and summary here. Raw notes are following:
 
-CON! revel, beego are not idiomatic Go because they forces you to embed handler to the Framework's struct
-
-CON martini, hoisie/web, macaron handlers are not strongly typed due to reflective dependency injection (which leads to poor performance)
-
-CON zenazn/goji handler and middleware is not strongly typed to emulate function overload
-
-CON gocraft/web handler is not strongly typed because it's a method with pointer receiver that could be any user-defined struct
-
-CON negroni, stdlib net/http does not dispatch request by HTTP verb (more boilerplate code)
-
-CON hoisie/web, zenazn/goji offers to use singletone istance of the server struct which is quite bad practice
-
-Q goji/goji has quite unusual API to dispatch requests by HTTP verb but it's still more verbose than in echo, gin, julienschmidt/httprouter
-
-PRO echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, pressly/chi handers are stronly typed
-
-PRO echo, gin, julienschmidt/httprouter, zenazn/goji, pressly/chi do dispatch requests by HTTP verb
-
-PRO echo, gin, zenazn/goji, pressly/chi support HTTP middleware
-Q julienschmidt/httprouter does not support HTTP middleware, gorilla/handlers are recommended instead
-
-Q goji/goji keeps handler interface standard but it's quite verbose to type. Consider
-
-Q echo handers returns error value which could be handled in next middlewares in the chain. Consider
-
-
-FYI labstack/echo has own router, supports most handler / middleware APIs
-
-FYI gin uses julienschmidt/httprouter, per-request context map
-
-FYI negroni recommends gorilla/mux router; Golang 1.7 context can be used (or gorilla/context for Golang < 1.7)
-
-CON gorilla/context uses global context map which may lead to lock contention
-
-PRO Golang 1.7 context uses per-request context map, Request.WithContext does a shallow copy of *Request
+- :thumbsdown: :exclamation: revel, beego are not idiomatic Go because they forces you to embed handler to the Framework's struct
+- :thumbsdown: martini, hoisie/web, macaron handlers are not strongly typed due to reflective dependency injection (which leads to poor performance)
+- :thumbsdown: zenazn/goji handler and middleware is not strongly typed to emulate function overload
+- :thumbsdown: gocraft/web handler is not strongly typed because it's a method with pointer receiver that could be any user-defined struct
+- :thumbsdown: negroni, stdlib net/http does not dispatch request by HTTP verb (more boilerplate code)
+- :thumbsdown: hoisie/web, zenazn/goji offers to use singletone istance of the server struct which is quite bad practice
+- :question: goji/goji has quite unusual API to dispatch requests by HTTP verb but it's still more verbose than in echo, gin, julienschmidt/httprouter
+- :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, pressly/chi handers are stronly typed
+- :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, pressly/chi do dispatch requests by HTTP verb
+- :thumbsup: echo, gin, zenazn/goji, pressly/chi support HTTP middleware
+- :question: julienschmidt/httprouter does not support HTTP middleware, gorilla/handlers are recommended instead
+- :question: goji/goji keeps handler interface standard but it's quite verbose to type. Consider
+- :question: echo handers returns error value which could be handled in next middlewares in the chain. Consider
+- FYI labstack/echo has own router, supports most handler / middleware APIs
+- FYI gin uses julienschmidt/httprouter, per-request context map
+- FYI negroni recommends gorilla/mux router; Golang 1.7 context can be used (or gorilla/context for Golang < 1.7)
+- :thumbsdown: gorilla/context uses global context map which may lead to lock contention
+- :thumbsup: Golang 1.7 context uses per-request context map, Request.WithContext does a shallow copy of *Request
 
 ### stdlib net/http
 stdlib net/http or negroni + stdlib net/http or negroni + gorilla/mux, https://golang.org/pkg/net/http/#ServeMux.HandleFunc
