@@ -17,6 +17,7 @@ NOTE While code blocks are self-explained the list of PROs an CONs are highly op
 - gin-gonic/gin
 - go-macaron/macaron
 - go-martini/martini
+- go-ozzo/ozzo-routing
 - gocraft/web
 - goji/goji
 - gorilla/mux
@@ -40,17 +41,17 @@ NOTE While code blocks are self-explained the list of PROs an CONs are highly op
 - :heavy_minus_sign: negroni, stdlib net/http does not dispatch request by HTTP verb (more boilerplate code)
 - :heavy_minus_sign: hoisie/web, zenazn/goji offers to use singletone istance of the server struct which is quite bad practice
 - :question: goji/goji has quite unusual API to dispatch requests by HTTP verb but it's still more verbose than in echo, gin, julienschmidt/httprouter
-- :heavy_plus_sign:  echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, pressly/chi handers are stronly typed
-- :heavy_plus_sign:  echo, gin, julienschmidt/httprouter, zenazn/goji, pressly/chi do dispatch requests by HTTP verb
-- :heavy_plus_sign:  echo, gin, zenazn/goji, pressly/chi support HTTP middleware
-- :heavy_plus_sign:  echo handers returns error value which could be handled in next middlewares in the chain
+- :heavy_plus_sign: echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, ozzo-routing, pressly/chi handers are stronly typed
+- :heavy_plus_sign: echo, gin, julienschmidt/httprouter, zenazn/goji, ozzo-routing, pressly/chi do dispatch requests by HTTP verb
+- :heavy_plus_sign: echo, gin, zenazn/goji, ozzo-routing, pressly/chi support HTTP middleware
+- :heavy_plus_sign: echo, ozzo-routing handers returns error value which could be handled in next middlewares in the chain
 - :question: julienschmidt/httprouter does not support HTTP middleware, gorilla/handlers are recommended instead
 - :question: goji/goji keeps handler interface standard but it's quite verbose to type
 - FYI labstack/echo has own router, supports most handler / middleware APIs
 - FYI gin uses julienschmidt/httprouter, per-request context map
 - FYI negroni recommends gorilla/mux router; Golang 1.7 context can be used (or gorilla/context for Golang < 1.7)
 - :heavy_minus_sign: gorilla/context uses global context map which may lead to lock contention
-- :heavy_plus_sign:  Golang 1.7 context uses per-request context map, Request.WithContext does a shallow copy of *Request
+- :heavy_plus_sign: Golang 1.7 context uses per-request context map, Request.WithContext does a shallow copy of *Request
 
 ### stdlib net/http
 stdlib net/http or negroni + stdlib net/http or negroni + gorilla/mux, https://golang.org/pkg/net/http/#ServeMux.HandleFunc
@@ -110,6 +111,15 @@ g.HandleFunc(pat.Get("/"), func (w http.ResponseWriter, r *http.Request) { ...
 g.HandleFuncC(pat.Get("/"), func (ctx context.Context, w http.ResponseWriter, r *http.Request) { ...
 ```
 
+### go-ozzo/ozzo-routing
+https://godoc.org/github.com/go-ozzo/ozzo-routing#RouteGroup.Get
+```go
+func (r *RouteGroup) Get(path string, handlers ...Handler) *Route
+type Handler func(*routing.Context) error
+
+r.Get("/", func(c *routing.Context) error { ...
+```
+
 ### hoisie/web
 https://godoc.org/github.com/hoisie/web#Get
 ```go
@@ -164,7 +174,7 @@ TODO add godoc urls
 - :heavy_minus_sign: martini, hoisie/web, macaron are not considered, their handers are not strongly typed due to reflective dependency injection
 - :heavy_minus_sign: zenazn/goji handler and middleware are not strongly typed to emulate function overload
 - :heavy_minus_sign: gin has "func (c *Context) Next()" function that visible to all handlers but must be called only inside middleware
-- :heavy_plus_sign:  echo, goji/goji, pressly/chi, negroni has strongly typed middleware with reasonable signatures
+- :heavy_plus_sign: echo, goji/goji, ozzo-routing, pressly/chi, negroni has strongly typed middleware with reasonable signatures
 - :question: negroni uses quite unusual signature for middleware. Why? I have only one explanation at this point. Author decide to avoid usage of higher-order function, so it would be easier to grasp for not-experienced developers
 - TODO gocraft/web PROs and CONs that related to the middleware API
 
@@ -217,6 +227,18 @@ func Middleware(inner goji.Handler) goji.Handler {
 		inner.ServeHTTPC(ctx, w, r)
 		/ do some stuff after
 	})
+}
+```
+
+### go-ozzo/ozzo-routing
+```go
+// middlewares and handers share the same type "Handler" in ozzo-routing
+
+func Middleware(c *routing.Context) error {
+	// do some stuff before
+	err := c.Next()
+	// do some stuff after
+	return err
 }
 ```
 
@@ -304,6 +326,15 @@ m.Get("/", func(ctx *macaron.Context) {
 m.Get("/", func(r render.Render) {
     // method will render HTTP 500 response if serialization fails
     r.JSON(http.StatusOK, Greeting{Hello: "world"})
+})
+```
+
+### go-ozzo/ozzo-routing
+```go
+// Context.Write will write the data in the format determined by the content negotiation middleware (included)
+r.Get("/", func(c *routing.Context) error {
+    // if Write returns an error, the framework will render HTTP 500 response by default
+    return c.Write(Greeting{Hello: "world"})
 })
 ```
 
@@ -411,6 +442,19 @@ type Greeting struct {
 // TODO check is binding.Bind(..) renders HTTP 400 response if validation fails
 m.Post("/", binding.Bind(Greeting{}), func(g Greeting) (int, string) {
 	return http.StatusNoContent, ""
+})
+```
+
+### go-ozzo/ozzo-routing
+```go
+r.Post("/", func(c *routing.Context) error {
+	var g Greeting
+	// Context.Read will read the data in the format specified by the "Content-Type" header
+	if err := c.Read(&g); err != nil {
+		return err
+	}
+	c.Response.WriteHeader(http.StatusCreated)
+	return nil
 })
 ```
 
