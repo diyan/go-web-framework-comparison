@@ -215,7 +215,7 @@ func Middleware(inner goji.Handler) goji.Handler {
 	return goji.HandlerFunc(func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		// do some stuff before
 		inner.ServeHTTPC(ctx, w, r)
-		/ do some stuff after
+		// do some stuff after
 	})
 }
 ```
