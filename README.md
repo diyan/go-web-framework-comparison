@@ -1,4 +1,4 @@
-# Golang Web Framework Comparsion
+# Golang Web Framework Comparison
 
 This suite aims to compare the public API of various Go web frameworks and routers.
 
