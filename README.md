@@ -39,12 +39,12 @@ NOTE While code blocks are self-explained the list of PROs an CONs are highly op
 - :thumbsdown: zenazn/goji handler and middleware is not strongly typed to emulate function overload
 - :thumbsdown: gocraft/web handler is not strongly typed because it's a method with pointer receiver that could be any user-defined struct
 - :thumbsdown: negroni, stdlib net/http does not dispatch request by HTTP verb (more boilerplate code)
-- :thumbsdown: hoisie/web, zenazn/goji offers to use singletone istance of the server struct which is quite bad practice
+- :thumbsdown: hoisie/web, zenazn/goji offers to use singletone instance of the server struct which is quite bad practice
 - :question: goji/goji has quite unusual API to dispatch requests by HTTP verb but it's still more verbose than in echo, gin, julienschmidt/httprouter
-- :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, ozzo-routing, pressly/chi handers are stronly typed
+- :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, goji/goji, ozzo-routing, pressly/chi handlers are strongly typed
 - :thumbsup: echo, gin, julienschmidt/httprouter, zenazn/goji, ozzo-routing, pressly/chi do dispatch requests by HTTP verb
 - :thumbsup: echo, gin, zenazn/goji, ozzo-routing, pressly/chi support HTTP middleware
-- :thumbsup: echo, ozzo-routing handers returns error value which could be handled in next middlewares in the chain
+- :thumbsup: echo, ozzo-routing handlers returns error value which could be handled in next middlewares in the chain
 - :question: julienschmidt/httprouter does not support HTTP middleware, gorilla/handlers are recommended instead
 - :question: goji/goji keeps handler interface standard but it's quite verbose to type
 - FYI labstack/echo has own router, supports most handler / middleware APIs
@@ -171,7 +171,7 @@ g.Get("/", func(w http.ResponseWriter, req *http.Request) { ...
 TODO add godoc urls
 
 - :thumbsdown: revel, beego are not considered, they forces you to embed handler to the Framework's struct
-- :thumbsdown: martini, hoisie/web, macaron are not considered, their handers are not strongly typed due to reflective dependency injection
+- :thumbsdown: martini, hoisie/web, macaron are not considered, their handlers are not strongly typed due to reflective dependency injection
 - :thumbsdown: zenazn/goji handler and middleware are not strongly typed to emulate function overload
 - :thumbsdown: gin has "func (c *Context) Next()" function that visible to all handlers but must be called only inside middleware
 - :thumbsup: echo, goji/goji, ozzo-routing, pressly/chi, negroni has strongly typed middleware with reasonable signatures
@@ -232,7 +232,7 @@ func Middleware(inner goji.Handler) goji.Handler {
 
 ### go-ozzo/ozzo-routing
 ```go
-// middlewares and handers share the same type "Handler" in ozzo-routing
+// middlewares and handlers share the same type "Handler" in ozzo-routing
 
 func Middleware(c *routing.Context) error {
 	// do some stuff before
